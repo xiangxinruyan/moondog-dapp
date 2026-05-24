@@ -19,6 +19,7 @@
             color: #fff;
             padding: 16px;
         }
+        /* 右上角语言切换 */
         .lang-switch {
             position: fixed;
             top: 16px;
@@ -38,6 +39,28 @@
             transition: all 0.2s ease;
         }
         .lang-switch:active { transform: scale(0.96); }
+        /* 左上角白皮书入口 */
+        .whitepaper-link {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(8px);
+            padding: 8px 20px;
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #ffd966;
+            z-index: 100;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .whitepaper-link:active {
+            transform: scale(0.96);
+        }
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -166,10 +189,13 @@
             .container { padding: 1rem; }
             h1 { font-size: 2.2rem; }
             .dapp-btn { padding: 10px 28px; font-size: 1rem; }
+            .whitepaper-link { padding: 6px 14px; font-size: 0.75rem; top: 12px; left: 12px; }
+            .lang-switch { width: 90px; padding: 6px 0; font-size: 0.75rem; top: 12px; right: 12px; }
         }
     </style>
 </head>
 <body>
+<a href="/whitepaper.html" class="whitepaper-link">📄 白皮书</a>
 <div class="lang-switch" id="langSwitch">🌐 English</div>
 
 <!-- 中文版 -->
