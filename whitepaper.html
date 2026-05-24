@@ -2,14 +2,14 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <title>MoonDog AI 白皮书 | 去中心化 AI 宠物养成与链上财富管理协议</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none; /* 禁止文本选择 */
+            user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
         body {
@@ -18,6 +18,14 @@
             color: #e0e0e0;
             line-height: 1.7;
             position: relative;
+            touch-action: pan-x pan-y;
+        }
+        /* 禁止长按保存图片 */
+        img {
+            pointer-events: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
         /* 水印层 */
         .watermark {
@@ -46,27 +54,6 @@
             pointer-events: none;
             white-space: nowrap;
         }
-        .lang-switch {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(8px);
-            padding: 8px 20px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #ffd966;
-            border: 1px solid rgba(255,255,255,0.2);
-            z-index: 1000;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-        .lang-switch:hover {
-            background: rgba(255,217,102,0.2);
-            transform: scale(1.02);
-        }
         .container {
             max-width: 1000px;
             margin: 0 auto;
@@ -79,6 +66,39 @@
             border-radius: 32px;
             padding: 2.5rem;
             border: 1px solid rgba(255,255,255,0.08);
+        }
+        /* 白皮书头部 + 语言按钮 */
+        .whitepaper-header {
+            position: relative;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .lang-buttons {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: flex;
+            gap: 10px;
+        }
+        .lang-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,217,102,0.3);
+            padding: 6px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #ffd966;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .lang-btn.active {
+            background: #ffd966;
+            color: #0a0a0a;
+            border-color: #ffd966;
+        }
+        .lang-btn:active {
+            transform: scale(0.96);
         }
         h1 {
             font-size: 2.5rem;
@@ -190,17 +210,30 @@
             h1 { font-size: 1.8rem; }
             h2 { font-size: 1.4rem; }
             th, td { font-size: 0.75rem; padding: 6px 8px; }
+            .lang-buttons {
+                position: static;
+                justify-content: center;
+                margin-top: 10px;
+            }
+            .whitepaper-header {
+                margin-bottom: 0;
+            }
         }
     </style>
 </head>
 <body>
 <div class="watermark"></div>
-<div class="lang-switch" id="langSwitch">🌐 English</div>
 
 <!-- 中文版 -->
 <div id="zh" class="container">
     <div class="whitepaper">
-        <h1>MoonDog AI 白皮书</h1>
+        <div class="whitepaper-header">
+            <h1>MoonDog AI 白皮书</h1>
+            <div class="lang-buttons">
+                <div class="lang-btn active" id="btn-zh">中文</div>
+                <div class="lang-btn" id="btn-en">English</div>
+            </div>
+        </div>
         <div class="subtitle">去中心化 AI 宠物养成与链上财富管理协议</div>
         <div class="version">版本 1.0 | 最后更新：2026年5月 | 网络：Anubis Chain</div>
 
@@ -478,7 +511,13 @@
 <!-- 英文版 -->
 <div id="en" class="container hidden">
     <div class="whitepaper">
-        <h1>MoonDog AI Whitepaper</h1>
+        <div class="whitepaper-header">
+            <h1>MoonDog AI Whitepaper</h1>
+            <div class="lang-buttons">
+                <div class="lang-btn" id="btn-zh-en">中文</div>
+                <div class="lang-btn active" id="btn-en-en">English</div>
+            </div>
+        </div>
         <div class="subtitle">Decentralized AI Pet & On-Chain Wealth Management Protocol</div>
         <div class="version">Version 1.0 | Last Updated: May 2026 | Network: Anubis Chain</div>
 
@@ -631,64 +670,56 @@
 </div>
 
 <script>
-    // 禁止右键菜单
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        return false;
-    });
-    
     // 禁止保存网页 (Ctrl+S / Cmd+S)
     document.addEventListener('keydown', function(e) {
         if ((e.ctrlKey || e.metaKey) && e.key === 's') {
             e.preventDefault();
             return false;
         }
-        // 禁止 F12
         if (e.key === 'F12') {
             e.preventDefault();
             return false;
         }
-        // 禁止 Ctrl+Shift+I / Cmd+Option+I
         if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
             e.preventDefault();
             return false;
         }
-        // 禁止 Ctrl+U (查看源码)
         if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 'U')) {
             e.preventDefault();
             return false;
         }
     });
     
-    // 禁止拖拽图片
-    const images = document.querySelectorAll('img');
-    images.forEach(img => {
-        img.addEventListener('dragstart', function(e) {
-            e.preventDefault();
-            return false;
-        });
-    });
-    
     // 中英文切换
     const zhDiv = document.getElementById('zh');
     const enDiv = document.getElementById('en');
-    const switcher = document.getElementById('langSwitch');
-    let isChinese = true;
+    const zhBtn = document.getElementById('btn-zh');
+    const enBtn = document.getElementById('btn-en');
+    const zhBtnEn = document.getElementById('btn-zh-en');
+    const enBtnEn = document.getElementById('btn-en-en');
     
-    if (switcher) {
-        switcher.addEventListener('click', () => {
-            if (isChinese) {
-                zhDiv.classList.add('hidden');
-                enDiv.classList.remove('hidden');
-                switcher.textContent = '中文';
-            } else {
-                zhDiv.classList.remove('hidden');
-                enDiv.classList.add('hidden');
-                switcher.textContent = '🌐 English';
-            }
-            isChinese = !isChinese;
-        });
+    function setLanguage(lang) {
+        if (lang === 'zh') {
+            zhDiv.classList.remove('hidden');
+            enDiv.classList.add('hidden');
+            if (zhBtn) zhBtn.classList.add('active');
+            if (enBtn) enBtn.classList.remove('active');
+            if (zhBtnEn) zhBtnEn.classList.add('active');
+            if (enBtnEn) enBtnEn.classList.remove('active');
+        } else {
+            zhDiv.classList.add('hidden');
+            enDiv.classList.remove('hidden');
+            if (zhBtn) zhBtn.classList.remove('active');
+            if (enBtn) enBtn.classList.add('active');
+            if (zhBtnEn) zhBtnEn.classList.remove('active');
+            if (enBtnEn) enBtnEn.classList.add('active');
+        }
     }
+    
+    if (zhBtn) zhBtn.addEventListener('click', () => setLanguage('zh'));
+    if (enBtn) enBtn.addEventListener('click', () => setLanguage('en'));
+    if (zhBtnEn) zhBtnEn.addEventListener('click', () => setLanguage('zh'));
+    if (enBtnEn) enBtnEn.addEventListener('click', () => setLanguage('en'));
 </script>
 </body>
 </html>
