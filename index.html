@@ -1,84 +1,287 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOONDOG AI | DApp Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>MOONDOG AI | 智能宠物生态</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
         body {
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #0d1a2b 100%);
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
             min-height: 100vh;
             color: #fff;
+            padding: 16px;
         }
-        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
-        header { text-align: center; padding: 3rem 0; }
-        .logo { font-size: 4rem; margin-bottom: 1rem; }
-        h1 { font-size: 3rem; background: linear-gradient(135deg, #ffd700, #ff8c00); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .tagline { color: #aaa; margin-top: 1rem; }
-        .roadmap { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 3rem 0; }
-        .phase { background: rgba(255,255,255,0.05); border-radius: 20px; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.1); transition: transform 0.3s; }
+        .lang-switch {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            width: 110px;
+            text-align: center;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(8px);
+            padding: 8px 0;
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #ffd966;
+            z-index: 100;
+            transition: all 0.2s ease;
+        }
+        .lang-switch:active { transform: scale(0.96); }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 48px;
+            backdrop-filter: blur(4px);
+        }
+        .logo-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .logo-img {
+            max-width: 130px;
+            width: 100%;
+            border-radius: 50%;
+            border: 3px solid #ffd966;
+            box-shadow: 0 0 30px rgba(255,217,102,0.4);
+            pointer-events: none;
+        }
+        h1 {
+            font-size: 3rem;
+            text-align: center;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 10px 0 5px;
+        }
+        .tagline {
+            text-align: center;
+            color: #a0c4ff;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+        /* DApp 按钮 */
+        .dapp-button-wrapper {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0 10px;
+        }
+        .dapp-btn {
+            background: linear-gradient(95deg, #ffd966, #ff9a3c);
+            border: none;
+            padding: 14px 40px;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #0a0f1e;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(255,217,102,0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: inherit;
+        }
+        .dapp-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 4px 12px rgba(255,217,102,0.4);
+        }
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffd966;
+            color: #0a0f1e;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            z-index: 1000;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .roadmap {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2.5rem 0;
+        }
+        .phase {
+            background: rgba(255,255,255,0.05);
+            border-radius: 24px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.2s;
+        }
         .phase:hover { transform: translateY(-5px); background: rgba(255,255,255,0.08); }
-        .phase h3 { color: #ffd700; margin-bottom: 1rem; font-size: 1.5rem; }
+        .phase h3 { color: #ffd966; margin-bottom: 12px; font-size: 1.4rem; }
         .phase p { color: #ccc; font-size: 0.9rem; line-height: 1.5; }
-        .phase .status { display: inline-block; margin-top: 1rem; padding: 0.25rem 0.75rem; background: #2c2c3e; border-radius: 20px; font-size: 0.75rem; }
-        .token-info { background: rgba(0,0,0,0.5); border-radius: 20px; padding: 1.5rem; margin: 2rem 0; text-align: center; }
-        .address { font-family: monospace; background: #000; padding: 0.75rem; border-radius: 10px; margin-top: 0.5rem; word-break: break-all; }
-        footer { text-align: center; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); color: #666; }
-        a { color: #ffd700; text-decoration: none; }
-        @media (max-width: 768px) { .container { padding: 1rem; } h1 { font-size: 2rem; } }
+        .phase .status {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 4px 12px;
+            background: #2c2c3e;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+        .token-info {
+            background: rgba(0,0,0,0.5);
+            border-radius: 24px;
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        .contract-address {
+            font-family: monospace;
+            background: #00000066;
+            padding: 8px 12px;
+            border-radius: 40px;
+            display: inline-block;
+            font-size: 0.7rem;
+            word-break: break-all;
+            cursor: pointer;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #5a6e8a;
+            font-size: 0.7rem;
+        }
+        .hidden { display: none; }
+        .highlight { color: #ffd966; }
+        @media (max-width: 700px) {
+            .container { padding: 1rem; }
+            h1 { font-size: 2.2rem; }
+            .dapp-btn { padding: 10px 28px; font-size: 1rem; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">🐕 🚀</div>
-            <h1>MOONDOG AI</h1>
-            <div class="tagline">AI-Powered Pet on Anubis Chain</div>
-        </header>
+<div class="lang-switch" id="langSwitch">🌐 English</div>
 
-        <div class="token-info">
-            <strong>⚡ $MOONDOG</strong> — Coming Soon After DApp Launch
-        </div>
-
-        <h2 style="text-align: center; margin: 2rem 0 1rem;">📌 发展路线图</h2>
-        <div class="roadmap">
-            <div class="phase">
-                <h3>🌕 第一阶段</h3>
-                <p>基石构建：代币与基础NFT</p>
-                <p style="font-size:0.8rem; margin-top:0.5rem;">✅ 代币合约完成<br>✅ 域名与门户上线<br>🔄 NFT合约开发中</p>
-                <span class="status">进行中</span>
-            </div>
-            <div class="phase">
-                <h3>🌖 第二阶段</h3>
-                <p>宠物生态激活：游戏化核心</p>
-                <p style="font-size:0.8rem; margin-top:0.5rem;">喂养、属性升级、繁育系统</p>
-                <span class="status">规划中</span>
-            </div>
-            <div class="phase">
-                <h3>🌗 第三阶段</h3>
-                <p>AI灵魂注入：智能与交互</p>
-                <p style="font-size:0.8rem; margin-top:0.5rem;">AI对话、职业天赋、钱包授权</p>
-                <span class="status">规划中</span>
-            </div>
-            <div class="phase">
-                <h3>🌘 第四阶段</h3>
-                <p>价值流通与拓展</p>
-                <p style="font-size:0.8rem; margin-top:0.5rem;">内置市场、公会系统、生态协作</p>
-                <span class="status">规划中</span>
-            </div>
-        </div>
-
-        <div class="token-info">
-            📍 官方门户（DApp入口）：<strong>moondogai.xyz</strong><br>
-            🔗 项目官网：<a href="http://moodnog.cc.cd" target="_blank">moodnog.cc.cd</a><br>
-            ⛓️ 网络：Anubis Chain
-        </div>
-
-        <footer>
-            © 2026 MOONDOG AI · All trademarks reserved
-        </footer>
+<!-- 中文版 -->
+<div id="chinese" class="container">
+    <div class="logo-wrapper">
+        <img class="logo-img" src="https://raw.githubusercontent.com/xiangxinruyan/moondog-dapp/main/logo.png" alt="MOONDOG Logo" onerror="this.src='https://raw.githubusercontent.com/xiangxinruyan/moondog/main/logo.png'">
     </div>
+    <h1>MOONDOG AI</h1>
+    <div class="tagline">🐕 Anubis 链 | AI 智能宠物 · 财富管家</div>
+
+    <div class="dapp-button-wrapper">
+        <button class="dapp-btn" onclick="showComingSoon()">🚀 进入 DApp</button>
+    </div>
+
+    <div class="token-info">
+        <strong>⚡ $MOONDOG</strong> — DApp 上线后同步启动<br>
+        <span style="font-size:0.75rem;">合约地址</span><br>
+        <div class="contract-address" onclick="copyAddress('0xFd9a3807BA599E424b9331B442b331Babe907BC4')">
+            0xFd9a3807BA599E424b9331B442b331Babe907BC4
+        </div>
+    </div>
+
+    <h2 style="text-align:center;">📌 发展路线图</h2>
+    <div class="roadmap">
+        <div class="phase"><h3>🌕 第一阶段</h3><p>基石构建：代币与基础NFT<br>✅ 代币合约完成<br>✅ 域名与门户上线<br>🔄 NFT合约开发中</p><span class="status">进行中</span></div>
+        <div class="phase"><h3>🌖 第二阶段</h3><p>宠物生态激活：游戏化核心<br>喂养 · 属性升级 · 繁育系统</p><span class="status">规划中</span></div>
+        <div class="phase"><h3>🌗 第三阶段 · AI灵魂注入</h3><p>「交易猎犬」「先知猫头鹰」「打新蜂鸟」专属天赋技能<br>AI对话 + 钱包授权管理</p><span class="status">规划中</span></div>
+        <div class="phase"><h3>🌘 第四阶段</h3><p>价值流通与拓展：内置市场 · 公会系统 · 多宠物联动</p><span class="status">规划中</span></div>
+    </div>
+
+    <div class="token-info">
+        📍 DApp 入口：<strong>moondogai.xyz</strong><br>
+        ⛓️ 网络：Anubis Chain<br>
+        🔒 合约权限已丢弃 · LP 永久锁死
+    </div>
+    <footer>© 2026 MOONDOG AI · 去中心化 AI 宠物生态</footer>
+</div>
+
+<!-- 英文版 -->
+<div id="english" class="container hidden">
+    <div class="logo-wrapper">
+        <img class="logo-img" src="https://raw.githubusercontent.com/xiangxinruyan/moondog-dapp/main/logo.png" alt="MOONDOG Logo" onerror="this.src='https://raw.githubusercontent.com/xiangxinruyan/moondog/main/logo.png'">
+    </div>
+    <h1>MOONDOG AI</h1>
+    <div class="tagline">🐕 On Anubis Chain | AI Smart Pet + Wealth Manager</div>
+
+    <div class="dapp-button-wrapper">
+        <button class="dapp-btn" onclick="showComingSoon()">🚀 Launch DApp</button>
+    </div>
+
+    <div class="token-info">
+        <strong>⚡ $MOONDOG</strong> — Coming Live with DApp<br>
+        <span style="font-size:0.75rem;">Contract Address</span><br>
+        <div class="contract-address" onclick="copyAddress('0xFd9a3807BA599E424b9331B442b331Babe907BC4')">
+            0xFd9a3807BA599E424b9331B442b331Babe907BC4
+        </div>
+    </div>
+
+    <h2 style="text-align:center;">📌 Roadmap</h2>
+    <div class="roadmap">
+        <div class="phase"><h3>🌕 Phase 1</h3><p>Foundation: Token & NFT<br>✅ Token contract ready<br>✅ Domain & portal live<br>🔄 NFT contract in progress</p><span class="status">Ongoing</span></div>
+        <div class="phase"><h3>🌖 Phase 2</h3><p>Gamification Core<br>Feeding · Upgrades · Breeding</p><span class="status">Planned</span></div>
+        <div class="phase"><h3>🌗 Phase 3 · AI Soul</h3><p>「Trade Hound」「Prophet Owl」「Airdrop Hummingbird」<br>AI Chat + Wallet Authorization</p><span class="status">Planned</span></div>
+        <div class="phase"><h3>🌘 Phase 4</h3><p>Value Circulation: Built‑in Market · Guild System · Synergy</p><span class="status">Planned</span></div>
+    </div>
+
+    <div class="token-info">
+        📍 DApp Portal: <strong>moondogai.xyz</strong><br>
+        ⛓️ Network: Anubis Chain<br>
+        🔒 Ownership renounced · LP permanently locked
+    </div>
+    <footer>© 2026 MOONDOG AI · Decentralized AI Pet Ecosystem</footer>
+</div>
+
+<script>
+    const chn = document.getElementById('chinese');
+    const eng = document.getElementById('english');
+    const switcher = document.getElementById('langSwitch');
+    let isChinese = true;
+
+    switcher.addEventListener('click', () => {
+        if (isChinese) {
+            chn.classList.add('hidden');
+            eng.classList.remove('hidden');
+            switcher.textContent = '🌐 中文';
+        } else {
+            chn.classList.remove('hidden');
+            eng.classList.add('hidden');
+            switcher.textContent = '🌐 English';
+        }
+        isChinese = !isChinese;
+    });
+
+    function showComingSoon() {
+        const msgDiv = document.createElement('div');
+        const text = isChinese ? '🛠️ DApp 开发中，敬请期待！' : '🛠️ DApp in development — stay tuned!';
+        msgDiv.className = 'toast-msg';
+        msgDiv.innerText = text;
+        document.body.appendChild(msgDiv);
+        setTimeout(() => msgDiv.remove(), 2000);
+    }
+
+    function copyAddress(addr) {
+        navigator.clipboard.writeText(addr).then(() => {
+            const tip = document.createElement('div');
+            tip.className = 'toast-msg';
+            tip.innerText = isChinese ? '✓ 合约地址已复制' : '✓ Contract address copied';
+            document.body.appendChild(tip);
+            setTimeout(() => tip.remove(), 1500);
+        });
+    }
+</script>
 </body>
 </html>
