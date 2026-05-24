@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>MoonDog AI 白皮书 | 去中心化 AI 宠物养成与链上财富管理协议</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* 禁止文本选择 */
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background: #0a0a0a;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            color: #e0e0e0;
+            line-height: 1.7;
+            position: relative;
+        }
+        /* 水印层 */
+        .watermark {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 217, 102, 0.02) 0px,
+                rgba(255, 217, 102, 0.02) 150px,
+                rgba(255, 217, 102, 0.04) 150px,
+                rgba(255, 217, 102, 0.04) 300px
+            );
+        }
+        .watermark::after {
+            content: "MoonDog AI Confidential";
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 10px;
+            color: rgba(255,217,102,0.15);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .lang-switch {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(8px);
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #ffd966;
+            border: 1px solid rgba(255,255,255,0.2);
+            z-index: 1000;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .lang-switch:hover {
+            background: rgba(255,217,102,0.2);
+            transform: scale(1.02);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+            position: relative;
+            z-index: 1;
+        }
+        .whitepaper {
+            background: rgba(255,255,255,0.03);
+            border-radius: 32px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            text-align: center;
+            color: #ffd966;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 1rem;
+        }
+        .version {
+            text-align: center;
+            color: #666;
+            font-size: 0.8rem;
+            margin-bottom: 2rem;
+        }
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #ffd966;
+            border-left: 4px solid #ffd966;
+            padding-left: 1rem;
+        }
+        h3 {
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #ffaa33;
+        }
+        h4 {
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #ddd;
+        }
+        p {
+            margin-bottom: 1rem;
+            color: #ccc;
+        }
+        ul, ol {
+            margin: 0.75rem 0 1rem 1.8rem;
+        }
+        li {
+            margin: 0.4rem 0;
+            color: #bbb;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.2rem 0;
+            font-size: 0.85rem;
+            background: rgba(0,0,0,0.3);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        th, td {
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 10px 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background: rgba(255,217,102,0.15);
+            color: #ffd966;
+            font-weight: 600;
+        }
+        .highlight {
+            color: #ffd966;
+            font-weight: 500;
+        }
+        .note {
+            background: rgba(255,217,102,0.08);
+            border-left: 3px solid #ffd966;
+            padding: 0.8rem 1.2rem;
+            margin: 1rem 0;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #666;
+            font-size: 0.75rem;
+        }
+        a {
+            color: #ffd966;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .hidden {
+            display: none;
+        }
+        @media (max-width: 700px) {
+            .container { padding: 1rem; }
+            .whitepaper { padding: 1.2rem; }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; }
+            th, td { font-size: 0.75rem; padding: 6px 8px; }
+        }
+    </style>
+</head>
+<body>
+<div class="watermark"></div>
+<div class="lang-switch" id="langSwitch">🌐 English</div>
+
+<!-- 中文版 -->
+<div id="zh" class="container">
+    <div class="whitepaper">
+        <h1>MoonDog AI 白皮书</h1>
+        <div class="subtitle">去中心化 AI 宠物养成与链上财富管理协议</div>
+        <div class="version">版本 1.0 | 最后更新：2026年5月 | 网络：Anubis Chain</div>
+
+        <h2>目录</h2>
+        <ul>
+            <li>1. 摘要</li>
+            <li>2. 背景与愿景</li>
+            <li>3. 代币经济系统</li>
+            <li>4. NFT 宠物系统</li>
+            <li>5. 宠物属性与技能体系</li>
+            <li>6. 游戏化养成机制</li>
+            <li>7. 租赁市场</li>
+            <li>8. 道具与消耗品系统</li>
+            <li>9. 任务与活动系统</li>
+            <li>10. 交易市场</li>
+            <li>11. 公会系统与协作技能</li>
+            <li>12. DAO 治理路线图</li>
+            <li>13. 安全与合规</li>
+            <li>14. 完整路线图</li>
+            <li>15. 总结</li>
+        </ul>
+
+        <h2>1. 摘要</h2>
+        <p>MoonDog AI 是部署在 Anubis 链上的首个去中心化 AI 宠物养成与链上财富管理协议。它将人工智能、游戏化养成与实用的链上工具相结合，为每一位持币者提供一只独特的 AI 宠物——既是数字伴侣，也是智能化的链上财富管家。</p>
+        <p>与传统 GameFi 项目不同，MoonDog AI 不依赖简单的"买入-持有-卖出"模式，也不设计复杂的战斗系统。我们的核心价值在于：<span class="highlight">宠物服务于人，而非人服务于宠物</span>。每只宠物的技能都对应加密货币玩家日常所需的实用功能——从监测鲸鱼动向、检测貔貅项目，到优化 DeFi 策略、预警无常损失。</p>
+        <p>MoonDog AI 的经济模型围绕 $MOONDOG 代币构建，通过买入/卖出税费、市场手续费、租赁手续费和销毁机制，形成可持续的通缩飞轮。同时，我们预留了充足的扩展空间：未来的新技能、新等级、新道具、公会系统和 DAO 治理，都将由社区提案驱动，确保项目可以长期演进。</p>
+
+        <h2>2. 背景与愿景</h2>
+        <h3>2.1 行业痛点</h3>
+        <p>过去数年间，区块链游戏和 GameFi 项目经历了从狂热到冷静的完整周期。我们观察到以下长期存在的问题：缺乏实用性（大多数 NFT 宠物仅仅是"好看的图片"）、旁氏模型（靠新用户入场资金支付老用户收益）、高门槛（复杂的游戏机制让普通用户望而却步）、AI 应用浅层、功能单一（宠物无法帮助用户在真实的链上活动中获得价值）。</p>
+
+        <h3>2.2 AI 与 Web3 的交汇</h3>
+        <p>2024 年以来，大语言模型的快速成熟让"智能 Agent"成为可能。将 LLM 接入链上宠物，意味着宠物可以理解用户的自然语言指令、主动分析链上数据并提供建议、在用户授权下执行链上操作。这一技术拐点，是 MoonDog AI 诞生的核心前提。</p>
+
+        <h3>2.3 Anubis 链的选择</h3>
+        <p>MoonDog AI 选择部署在 Anubis Chain，原因如下：低费率（宠物养成需要高频交互）、高吞吐（支持大规模用户同时在线）、EVM 兼容（开发工具链成熟）、社区活跃（新兴公链用户对新项目接受度高）。</p>
+
+        <h3>2.4 愿景</h3>
+        <p><span class="highlight">短期愿景（1-2 年）</span>：成为 Anubis 链上用户量最大的 AI 宠物协议，覆盖链上交易辅助、信息预警、DeFi 策略等核心场景。</p>
+        <p><span class="highlight">中期愿景（2-3 年）</span>：扩展至多链，建立跨链宠物生态，宠物技能覆盖主流 DeFi 协议和交易场景。</p>
+        <p><span class="highlight">长期愿景（3-5 年）</span>：建立宠物 DAO 治理体系，关键参数由社区投票决定。MoonDog AI 从一个项目演化为一个由用户共同拥有的协议。</p>
+
+        <div class="note">
+            <strong>💡 核心叙事</strong><br>
+            “每一位持币者，都值得拥有一只忠诚的 AI 伴侣。”<br>
+            MoonDog AI 不是另一个“Play to Earn”游戏，而是一个“Live to Earn”和“Use to Earn”的生态。
+        </div>
+
+        <h2>3. 代币经济系统</h2>
+        <h3>3.1 基本信息</h3>
+        <table>
+            <tr><th>参数</th><th>数值</th></tr>
+            <tr><td>代币名称</td><td>MOONDOG</td></tr>
+            <tr><td>代币符号</td><td>MOONDOG</td></tr>
+            <tr><td>网络</td><td>Anubis Chain</td></tr>
+            <tr><td>总供应量</td><td>210,000,000,000（2100亿）</td></tr>
+            <tr><td>小数位数</td><td>18</td></tr>
+            <tr><td>合约地址</td><td><code>0xe0A04154C010839b953869182619cEeac1eCA94E</code></td></tr>
+        </table>
+
+        <h3>3.2 税费机制</h3>
+        <p><span class="highlight">买入税费（总计 1%）</span>：0.5% 运营钱包 + 0.5% 添加流动性</p>
+        <p><span class="highlight">卖出税费（总计 4%）</span>：2.0% 运营钱包 + 1.5% 添加流动性 + 0.5% 永久销毁</p>
+        <p>设计说明：买入税费较低，降低新用户入场门槛；卖出税费包含销毁机制，形成持续通缩；运营钱包资金用于开发、营销、审计、合作等生态建设；LP 添加部分自动增加流动性深度。</p>
+
+        <h3>3.3 总量与分配</h3>
+        <p>100% 代币用于添加初始流动性，无团队预留，无预挖。运营资金完全来自协议自身产生的税费，确保团队与社区利益完全一致。</p>
+
+        <h3>3.4 通缩机制</h3>
+        <p>通缩来自两个渠道：卖出税费（0.5% 的卖出金额）和手续费销毁（1% 的市场/租赁/道具手续费）。销毁的代币将永久从总供应量中扣除，不可恢复。</p>
+
+        <h3>3.5 LP 流动性锁仓</h3>
+        <p>初始添加的流动性代币（LP Token）将被<strong>永久发送至黑洞地址（0x000...dEaD）</strong>，任何人（包括团队）都无法撤出流动性，确保无撤池风险、交易深度永久存在。</p>
+
+        <h2>4. NFT 宠物系统</h2>
+        <h3>4.1 设计理念</h3>
+        <p>MoonDog AI 的 NFT 宠物不是"静态头像"，而是动态、可成长、具备实用技能的链上 Agent。每只宠物由品级、元素/类型、性别、初始职业倾向、技能槽数量、技能列表等维度定义。</p>
+
+        <h3>4.2 品级体系</h3>
+        <table>
+            <tr><th>品级</th><th>名称</th><th>盲盒概率</th><th>说明</th></tr>
+            <tr><td>N</td><td>普通</td><td>~50%</td><td>基础属性</td></tr>
+            <tr><td>R</td><td>稀有</td><td>~30%</td><td>中等属性</td></tr>
+            <tr><td>SR</td><td>超稀有</td><td>~12%</td><td>较高属性</td></tr>
+            <tr><td>SSR</td><td>极稀有</td><td>~6%</td><td>优秀属性</td></tr>
+            <tr><td>UR</td><td>极限稀有</td><td>~1.5%</td><td>顶级属性</td></tr>
+            <tr><td>LR</td><td>传说</td><td>~0.4%</td><td>接近完美</td></tr>
+            <tr><td>CR</td><td>至高</td><td>~0.1%</td><td>完美属性</td></tr>
+        </table>
+        <p>注：品级影响初始技能等级上限和升级效率，但不决定最终上限——通过长期养成，低品级宠物也可达到高等级。</p>
+
+        <h3>4.3 盲盒铸造</h3>
+        <p>铸造方式：消耗 $MOONDOG 代币（初始 10,000 MOONDOG），随机生成一只宠物 NFT。</p>
+        <p><span class="highlight">属性数量概率</span>：1 条技能 90%，2 条技能 9%，3 条技能 1%。</p>
+        <p><span class="highlight">技能等级分布</span>：D 级 ~50%，C 级 ~30%，B 级 ~12%，A 级 ~6%，S 级 ~1.5%，SS 级 ~0.4%，SSS 级 ~0.1%。</p>
+
+        <h2>5. 宠物属性与技能体系</h2>
+        <h3>5.1 技能等级体系</h3>
+        <table>
+            <tr><th>等级</th><th>符号</th><th>效果倍数</th><th>说明</th></tr>
+            <tr><td>普通</td><td>D</td><td>1.0x</td><td>基础效果</td></tr>
+            <tr><td>优秀</td><td>C</td><td>1.5x</td><td>效果提升 50%</td></tr>
+            <tr><td>稀有</td><td>B</td><td>2.0x</td><td>效果翻倍</td></tr>
+            <tr><td>史诗</td><td>A</td><td>3.0x</td><td>效果三倍</td></tr>
+            <tr><td>传说</td><td>S</td><td>5.0x</td><td>效果五倍</td></tr>
+            <tr><td>神话</td><td>SS</td><td>8.0x</td><td>效果八倍</td></tr>
+            <tr><td>至高</td><td>SSS</td><td>12.0x</td><td>效果十二倍</td></tr>
+        </table>
+
+        <h3>5.2 技能类型总览</h3>
+        <p>MoonDog AI 的技能体系分为五大类，每类包含若干具体技能。以下列举的技能是初始版本计划实现的，未来可通过社区提案无限扩展。</p>
+        <ul>
+            <li><strong>交易辅助类</strong>：鲸鱼警报、聪明钱追踪、Gas 捕手、MEV 防护、限价单助手</li>
+            <li><strong>信息与预言机类</strong>：新币雷达、貔貅检测、土狗评分、情绪追踪、跨链套利提醒</li>
+            <li><strong>DeFi 策略类</strong>：收益猎手、无常预警、定投机器人、清算猎人、空投猎人</li>
+            <li><strong>钱包与安全类</strong>：授权清理、钓鱼检测、钱包健康分、继承者</li>
+            <li><strong>稀有专属技能</strong>：预言家、阿尔法猎人、聪明钱包克隆、MEV 狙击手、跨链骑士</li>
+        </ul>
+
+        <div class="note">
+            <strong>📌 技能扩展机制</strong><br>
+            MoonDog AI 的技能体系不设上限。未来可通过官方发布、社区提案、季节性活动、跨链合作等方式增加新技能。
+        </div>
+
+        <h2>6. 游戏化养成机制</h2>
+        <h3>6.1 喂养与生命系统</h3>
+        <p>每只宠物拥有生命值属性，随时间自然衰减，需消耗 $MOONDOG 喂养补充。生命值归零则宠物进入休眠状态（技能不可用，但可交易/可唤醒）。每 24 小时衰减 10%。</p>
+
+        <h3>6.2 属性升级系统</h3>
+        <p>消耗 $MOONDOG 可提升宠物技能等级（D → C → B → A → S → SS → SSS）。具体消耗数值将在上线前最终确定，并可经由社区投票调整。</p>
+
+        <h3>6.3 觉醒系统（开启新技能槽）</h3>
+        <p>初始宠物最多拥有 3 条技能。通过觉醒可逐步开启更多技能槽：1→2 消耗 500,000 MOONDOG + 觉醒石 x1；2→3 消耗 2,000,000 MOONDOG + 觉醒石 x3。</p>
+
+        <h3>6.4 洗练系统（更换技能）</h3>
+        <p>消耗 $MOONDOG 和洗练石，可随机更换指定技能槽的技能。提供普通洗练、定向洗练、锁定洗练三种方式。</p>
+
+        <h3>6.5 繁育系统</h3>
+        <p>两只性别不同、品级满足条件的宠物可进行繁育，产生新的宠物 NFT。消耗 $MOONDOG，父母进入冷却期，产出随机继承父母属性，有概率变异。</p>
+
+        <h3>6.6 融合系统</h3>
+        <p>两只宠物（不限性别）可融合，产生全新的宠物 NFT（融合后父母消失）。融合 10 次保底至少 B 级以上宠物。</p>
+
+        <div class="note">
+            <strong>⏳ 长期性设计</strong><br>
+            从 D 级到 SSS 级，消耗的 $MOONDOG 呈指数级增长。多数用户需要数月甚至一年才能将宠物培养到顶级。这是故意设计——我们希望宠物陪伴用户长期成长。
+        </div>
+
+        <h2>7. 租赁市场</h2>
+        <p><span class="highlight">核心逻辑</span>：宠物闲置不如租出去赚 $MOONDOG。出租方将宠物挂上租赁市场，设定租金和租期；承租方支付租金，在租期内获得该宠物的全部技能使用权；租期结束宠物自动归还，租金结算给原主人。</p>
+        <p><span class="highlight">租金定价</span>：由市场自由定价，受技能数量、技能等级、品级、市场供需等因素影响。</p>
+        <p><span class="highlight">租赁手续费</span>：每笔租金收取 5% 平台手续费，分配如下：3% 用于生态开发与营销，2% 添加流动性，1% 永久销毁。</p>
+        <p><span class="highlight">租赁信誉系统</span>：为降低租赁风险，MoonDog AI 将引入信誉分机制。初始 60 分，完成租赁加分，恶意行为减分，低于 40 分需缴纳保证金。</p>
+
+        <h2>8. 道具与消耗品系统</h2>
+        <p>道具系统是 MoonDog AI 经济生态的重要组成。道具既可作为任务奖励免费获得，也可在市场上自由交易。所有道具交易均使用 $MOONDOG 结算，并纳入统一的手续费分配机制。</p>
+        
+        <h3>8.1 道具类型与功能</h3>
+        <table>
+            <tr><th>道具名称</th><th>功能</th><th>获取方式</th><th>稀有度</th></tr>
+            <tr><td>饲料</td><td>补充宠物生命值（基础量）</td><td>日常任务、市场购买</td><td>普通</td></tr>
+            <tr><td>高级饲料</td><td>补充宠物生命值（大量）</td><td>周常任务、活动、市场购买</td><td>稀有</td></tr>
+            <tr><td>经验药水</td><td>增加宠物经验值</td><td>日常/周常任务、市场购买</td><td>普通</td></tr>
+            <tr><td>高级经验药水</td><td>大幅增加宠物经验值</td><td>赛季任务、活动、市场购买</td><td>稀有</td></tr>
+            <tr><td>洗练石</td><td>普通洗练（随机更换技能）</td><td>周常任务、市场购买</td><td>稀有</td></tr>
+            <tr><td>定向洗练石</td><td>定向洗练（指定技能池）</td><td>活动、市场购买</td><td>史诗</td></tr>
+            <tr><td>锁定洗练石</td><td>锁定洗练（保留技能换等级）</td><td>高难度活动、市场购买</td><td>传说</td></tr>
+            <tr><td>觉醒石</td><td>开启新技能槽</td><td>赛季奖励、市场购买</td><td>史诗</td></tr>
+            <tr><td>升级卷轴</td><td>直接提升技能等级一级</td><td>大型活动、市场购买</td><td>传说</td></tr>
+            <tr><td>进化石</td><td>提升宠物品级</td><td>极稀有活动、市场购买</td><td>至高</td></tr>
+        </table>
+
+        <h3>8.2 道具交易市场</h3>
+        <p>玩家之间可自由交易道具：交易货币仅 $MOONDOG，手续费 5%（3% 生态开发 + 2% LP + 1% 销毁）。</p>
+
+        <h2>9. 任务与活动系统</h2>
+        <p>任务系统是 MoonDog AI 的"新手引导"和"日常粘性"工具，同时也是道具的主要产出源。我们不希望用户感到"被迫打卡"，因此任务设计为可选、灵活、有弹性。</p>
+        
+        <h3>9.1 任务类型</h3>
+        <ul>
+            <li><strong>每日任务</strong>：3-5 个简单任务，奖励饲料、经验药水</li>
+            <li><strong>每周任务</strong>：5-8 个中等难度任务，奖励洗练石、$MOONDOG</li>
+            <li><strong>赛季任务</strong>：20-30 个系列任务，奖励觉醒石、稀有道具</li>
+            <li><strong>成就任务</strong>：一次性里程碑任务，奖励装饰品、称号</li>
+            <li><strong>限时活动</strong>：特殊主题任务，奖励限定道具、限定宠物</li>
+        </ul>
+
+        <h3>9.2 赛季通行证</h3>
+        <p>每季度推出赛季通行证，双轨制：免费轨道（基础道具、小额 $MOONDOG）和付费轨道（5000 $MOONDOG，稀有道具、限定装饰、觉醒石）。</p>
+
+        <h2>10. 交易市场</h2>
+        <h3>10.1 宠物 NFT 市场</h3>
+        <p>支持一口价出售、拍卖、报价、合集浏览、收藏夹等功能。手续费：成交价的 5%（3% 生态开发 + 2% LP + 1% 销毁）。</p>
+        
+        <h3>10.2 版税机制</h3>
+        <p>宠物 NFT 每次转卖，项目方收取 5% 版税，分配：3% 生态开发 + 1.5% LP + 0.5% 销毁。</p>
+
+        <h2>11. 公会系统与协作技能</h2>
+        <h3>11.1 公会基础</h3>
+        <p>创建公会消耗 100,000 $MOONDOG，初始容量 10 人，可通过公会升级扩容。公会等级通过成员活跃度和贡献值提升。</p>
+        
+        <h3>11.2 协作技能</h3>
+        <p>当公会内同时拥有特定职业/技能的宠物时，激活协作技能：交易猎犬 + 先知猫头鹰 → "精准狙击"；鲸鱼警报 + 聪明钱追踪 → "巨鲸跟单"；貔貅检测 + 土狗评分 → "安全卫士"；3 只以上不同职业 → "百宝箱"（临时技能槽）。</p>
+
+        <div class="note">
+            <strong>📖 公会战（远期规划）</strong><br>
+            公会之间的友好竞赛，比拼成员的宠物养成进度和技能使用活跃度。胜者公会获得 $MOONDOG 奖池和限定装饰。
+        </div>
+
+        <h2>12. DAO 治理路线图</h2>
+        <h3>12.1 治理阶段</h3>
+        <ul>
+            <li><strong>第一阶段（上线前 6 个月）</strong>：团队主导，社区反馈</li>
+            <li><strong>第二阶段（上线后 6-12 个月）</strong>：关键参数社区投票，多签 + 社区</li>
+            <li><strong>第三阶段（上线后 12-24 个月）</strong>：主要参数社区投票，社区 DAO</li>
+            <li><strong>第四阶段（上线后 24 个月+）</strong>：完全链上治理，社区 DAO</li>
+        </ul>
+        
+        <h3>12.2 可治理参数</h3>
+        <p>买入税费（0.5% ~ 2%）、卖出税费（2% ~ 6%）、手续费（3% ~ 8%）、盲盒价格（5k ~ 50k）、升级消耗（±50%）、觉醒消耗（±50%）等。</p>
+        
+        <h3>12.3 投票机制</h3>
+        <p>投票权重：1 宠物 = 1 票（上限 10 票/钱包）。提案门槛：持有 5 只以上宠物或质押 500,000 $MOONDOG。投票周期 7 天，通过门槛：投票数 > 总权重的 10%，赞成 > 50%。</p>
+
+        <h2>13. 安全与合规</h2>
+        <h3>13.1 合约安全</h3>
+        <ul>
+            <li>第三方审计：上线前完成至少两家审计公司的代码审计</li>
+            <li>漏洞赏金：最高奖励 100,000 $MOONDOG</li>
+            <li>时间锁：关键参数变更设置 48 小时时间锁</li>
+            <li>多签钱包：早期控制权由 3/5 多签持有</li>
+            <li>LP 锁死：流动性代币永久发送至黑洞地址</li>
+        </ul>
+        
+        <h3>13.2 用户安全</h3>
+        <ul>
+            <li>黑名单机制：可标记恶意地址，防止机器人大规模操控</li>
+            <li>授权管理：用户可随时撤销宠物合约授权</li>
+            <li>交易限额：单笔交易最高限额（可调）</li>
+        </ul>
+
+        <h2>14. 完整路线图</h2>
+        <h3>第一阶段：基石构建（已完成/进行中）</h3>
+        <ul>
+            <li>✅ 代币合约部署</li>
+            <li>✅ 官网与门户上线</li>
+            <li>✅ 白皮书发布</li>
+            <li>🔄 盲盒合约开发</li>
+            <li>🔄 NFT 合约开发</li>
+            <li>⏳ 官方流动性池创建</li>
+            <li>⏳ 代币上线交易</li>
+        </ul>
+        
+        <h3>第二阶段：生态激活（规划中）</h3>
+        <p>喂养与生命系统、属性升级系统、觉醒与洗练系统、繁育系统、休眠机制、背包与道具系统。</p>
+        
+        <h3>第三阶段：AI 灵魂注入（规划中）</h3>
+        <p>AI 对话框架、交易猎犬技能模块、先知猫头鹰技能模块、打新蜂鸟技能模块、钱包授权管理、更多职业技能扩展。</p>
+        
+        <h3>第四阶段：价值流通与拓展（规划中）</h3>
+        <p>宠物 NFT 市场、道具市场、租赁市场、公会系统、协作技能、DAO 治理、跨链扩展。</p>
+
+        <h2>15. 总结</h2>
+        <p>MoonDog AI 不是一个短期项目，而是一个长期演进、社区驱动、技术与经济模型双轮驱动的协议。</p>
+        <p><span class="highlight">我们相信：</span>宠物不是冰冷的 NFT，而是陪伴用户在 Web3 世界探索的伙伴；技能不是噱头，而是切实解决用户痛点的工具；经济模型不是旁氏，而是可持续的价值循环；治理不是口号，而是最终交还给社区的权利。</p>
+        <p><span class="highlight">MoonDog AI 的终局：</span>一个由社区拥有、宠物驱动、覆盖链上生活全场景的去中心化生态系统。每一位参与者，既是用户，也是主人；每一位持币者，都值得拥有一只忠诚的 AI 伴侣。</p>
+
+        <footer>
+            © 2026 MoonDog AI · 去中心化 AI 宠物生态<br>
+            官方网站：<a href="https://moondogai.xyz" target="_blank">https://moondogai.xyz</a>
+        </footer>
+    </div>
+</div>
+
+<!-- 英文版 -->
+<div id="en" class="container hidden">
+    <div class="whitepaper">
+        <h1>MoonDog AI Whitepaper</h1>
+        <div class="subtitle">Decentralized AI Pet & On-Chain Wealth Management Protocol</div>
+        <div class="version">Version 1.0 | Last Updated: May 2026 | Network: Anubis Chain</div>
+
+        <h2>Table of Contents</h2>
+        <ul>
+            <li>1. Abstract</li>
+            <li>2. Background & Vision</li>
+            <li>3. Tokenomics</li>
+            <li>4. NFT Pet System</li>
+            <li>5. Pet Attributes & Skill System</li>
+            <li>6. Gamification Mechanics</li>
+            <li>7. Rental Market</li>
+            <li>8. Item & Consumable System</li>
+            <li>9. Quest & Event System</li>
+            <li>10. Trading Market</li>
+            <li>11. Guild System & Synergy Skills</li>
+            <li>12. DAO Governance Roadmap</li>
+            <li>13. Security & Compliance</li>
+            <li>14. Full Roadmap</li>
+            <li>15. Conclusion</li>
+        </ul>
+
+        <h2>1. Abstract</h2>
+        <p>MoonDog AI is the first decentralized AI pet cultivation and on-chain wealth management protocol deployed on the Anubis Chain. It combines artificial intelligence, gamification, and practical on-chain tools, providing every token holder with a unique AI pet — both a digital companion and an intelligent on-chain wealth manager.</p>
+        <p>Unlike traditional GameFi projects, MoonDog AI does not rely on simple "buy-hold-sell" models or complex combat systems. Our core value is: <span class="highlight">Pets serve humans, not the other way around</span>. Every pet's skills correspond to practical features that crypto traders need daily — from tracking whale movements and detecting honeypots, to optimizing DeFi strategies and warning of impermanent loss.</p>
+
+        <h2>2. Background & Vision</h2>
+        <p>In recent years, blockchain gaming has experienced a full cycle from hype to reality. We observed persistent issues: lack of utility, unsustainable Ponzi models, high entry barriers, shallow AI applications, and pets that couldn't provide real value.</p>
+        <p>The rapid maturation of LLMs since 2024 has made intelligent agents possible. Connecting LLMs to on-chain pets means pets can understand natural language, analyze on-chain data, and execute authorized operations. This technological inflection point is the core premise behind MoonDog AI.</p>
+
+        <div class="note">
+            <strong>💡 Core Narrative</strong><br>
+            "Every token holder deserves a loyal AI companion."<br>
+            MoonDog AI is not another "Play to Earn" game, but a "Live to Earn" and "Use to Earn" ecosystem.
+        </div>
+
+        <h2>3. Tokenomics</h2>
+        <h3>3.1 Basic Information</h3>
+        <table>
+            <tr><th>Parameter</th><th>Value</th></tr>
+            <tr><td>Token Name</td><td>MOONDOG</td></tr>
+            <tr><td>Token Symbol</td><td>MOONDOG</td></tr>
+            <tr><td>Network</td><td>Anubis Chain</td></tr>
+            <tr><td>Total Supply</td><td>210,000,000,000 (210 billion)</td></tr>
+            <tr><td>Decimals</td><td>18</td></tr>
+            <tr><td>Contract Address</td><td><code>0xe0A04154C010839b953869182619cEeac1eCA94E</code></td></tr>
+        </table>
+
+        <h3>3.2 Tax Mechanism</h3>
+        <p><span class="highlight">Buy Tax (1% total)</span>: 0.5% operational wallet + 0.5% LP</p>
+        <p><span class="highlight">Sell Tax (4% total)</span>: 2.0% operational wallet + 1.5% LP + 0.5% permanent burn</p>
+        <p>100% of tokens are used for initial liquidity. No team allocation, no pre-mine. LP tokens are permanently locked to the dead address.</p>
+
+        <h2>4. NFT Pet System</h2>
+        <p>MoonDog AI NFTs are not static avatars but dynamic, growable, utility-rich on-chain agents. Each pet is defined by grade, element/type, gender, skill slots, and skill list.</p>
+        
+        <h3>4.1 Grade System</h3>
+        <table>
+            <tr><th>Grade</th><th>Name</th><th>Probability</th><th>Description</th></tr>
+            <tr><td>N</td><td>Normal</td><td>~50%</td><td>Base</td></tr>
+            <tr><td>R</td><td>Rare</td><td>~30%</td><td>Medium</td></tr>
+            <tr><td>SR</td><td>Super Rare</td><td>~12%</td><td>High</td></tr>
+            <tr><td>SSR</td><td>Extremely Rare</td><td>~6%</td><td>Excellent</td></tr>
+            <tr><td>UR</td><td>Ultra Rare</td><td>~1.5%</td><td>Top</td></tr>
+            <tr><td>LR</td><td>Legendary</td><td>~0.4%</td><td>Near Perfect</td></tr>
+            <tr><td>CR</td><td>Cosmic Rare</td><td>~0.1%</td><td>Perfect</td></tr>
+        </table>
+
+        <h3>4.2 Blind Box</h3>
+        <p>Cost: 10,000 MOONDOG. Skill count probability: 1 skill 90%, 2 skills 9%, 3 skills 1%. Skill grade distribution: D ~50%, C ~30%, B ~12%, A ~6%, S ~1.5%, SS ~0.4%, SSS ~0.1%.</p>
+
+        <h2>5. Pet Attributes & Skill System</h2>
+        <h3>5.1 Skill Grades</h3>
+        <table>
+            <tr><th>Grade</th><th>Symbol</th><th>Multiplier</th></tr>
+            <tr><td>Normal</td><td>D</td><td>1.0x</td></tr>
+            <tr><td>Excellent</td><td>C</td><td>1.5x</td></tr>
+            <tr><td>Rare</td><td>B</td><td>2.0x</td></tr>
+            <tr><td>Epic</td><td>A</td><td>3.0x</td></tr>
+            <tr><td>Legendary</td><td>S</td><td>5.0x</td></tr>
+            <tr><td>Mythic</td><td>SS</td><td>8.0x</td></tr>
+            <tr><td>Supreme</td><td>SSS</td><td>12.0x</td></tr>
+        </table>
+
+        <h3>5.2 Skill Categories</h3>
+        <ul>
+            <li><strong>Trading Assistant</strong>: Whale Alert, Smart Money Tracker, Gas Catcher, MEV Protection, Limit Order Assistant</li>
+            <li><strong>Information & Oracle</strong>: New Token Radar, Honeypot Detector, Rug Score, Sentiment Tracker, Cross-Chain Arbitrage</li>
+            <li><strong>DeFi Strategy</strong>: Yield Hunter, Impermanent Loss Warning, DCA Bot, Liquidation Hunter, Airdrop Hunter</li>
+            <li><strong>Wallet & Security</strong>: Approval Cleaner, Phishing Detector, Wallet Health Score, Inheritor</li>
+            <li><strong>Rare Exclusive</strong>: Oracle, Alpha Hunter, Smart Wallet Cloner, MEV Sniper, Cross-Chain Knight</li>
+        </ul>
+
+        <div class="note">
+            <strong>📌 Skill Expansion</strong><br>
+            The skill system has no upper limit. New skills can be added through official releases, community proposals, seasonal events, and cross-chain collaborations.
+        </div>
+
+        <h2>6. Gamification Mechanics</h2>
+        <p><strong>Feeding System</strong>: Life value decays over time (10% every 24 hours). Consume MOONDOG to replenish. Pets enter hibernation when life reaches zero.</p>
+        <p><strong>Skill Upgrades</strong>: D → C → B → A → S → SS → SSS, consuming MOONDOG.</p>
+        <p><strong>Awakening</strong>: Unlock new skill slots (1→2→3) using MOONDOG + Awakening Stones.</p>
+        <p><strong>Re-rolling</strong>: Change skills using MOONDOG + Re-rolling Stones.</p>
+        <p><strong>Breeding</strong>: Two pets of opposite genders can breed a new NFT with inherited traits.</p>
+        <p><strong>Fusion</strong>: Combine two pets into a completely new pet (parents are consumed). 10 fusions guarantee at least B grade.</p>
+
+        <div class="note">
+            <strong>⏳ Long-term Design</strong><br>
+            The cost from D to SSS grade grows exponentially. Most users will need months or even a year to reach top levels — by design, as we want pets to grow with users over the long term.
+        </div>
+
+        <h2>7. Rental Market</h2>
+        <p>Pet owners can list idle pets for rent, earning MOONDOG. Renters gain full skill access during the rental period. 5% platform fee (3% ecosystem development + 2% LP + 1% burn). Reputation system scores users based on rental behavior.</p>
+
+        <h2>8. Item & Consumable System</h2>
+        <p>Items include Feed, Exp Potions, Re-rolling Stones, Awakening Stones, Upgrade Scrolls, Evolution Stones, and Decorations. All items can be traded on the item market with a 5% fee.</p>
+
+        <h2>9. Quest & Event System</h2>
+        <p>Daily quests (3-5 tasks), Weekly quests (5-8 tasks), Season quests (20-30 tasks), Achievement quests, and Limited-time events. Season Pass with free and paid tracks (5,000 MOONDOG).</p>
+
+        <h2>10. Trading Market</h2>
+        <p>NFT marketplace supports fixed price, auction, offers, and collections. 5% transaction fee (3% ecosystem + 2% LP + 1% burn). 5% royalty on secondary sales of NFT pets.</p>
+
+        <h2>11. Guild System & Synergy Skills</h2>
+        <p>Create a guild for 100,000 MOONDOG. Guilds unlock synergy skills when specific skill combinations are present (e.g., Trade Hound + Prophet Owl = "Precision Snipe"). Guild wars planned for future versions.</p>
+
+        <h2>12. DAO Governance Roadmap</h2>
+        <p>Four-phase governance transition: Team-led (first 6 months) → Multi-sig + Community (6-12 months) → Community DAO (12-24 months) → Full on-chain governance (24+ months).</p>
+        <p>Governable parameters include buy/sell taxes, fees, blind box price, upgrade costs, etc. Voting weight: 1 pet = 1 vote (max 10 votes/wallet).</p>
+
+        <h2>13. Security & Compliance</h2>
+        <p>Multiple third-party audits, bug bounty program (100,000 MOONDOG), 48-hour timelock for parameter changes, 3/5 multi-sig for early control, LP tokens permanently locked to dead address, blacklist mechanism, and user-authorizable transaction limits.</p>
+
+        <h2>14. Full Roadmap</h2>
+        <p><strong>Phase 1 (Foundation)</strong>: ✅ Token contract deployed, ✅ Website live, ✅ Whitepaper released, 🔄 Blind box contract, 🔄 NFT contract, ⏳ Liquidity pool, ⏳ Trading launch.</p>
+        <p><strong>Phase 2 (Ecosystem Activation)</strong>: Feeding, upgrades, awakening, re-rolling, breeding, hibernation, inventory system.</p>
+        <p><strong>Phase 3 (AI Soul Injection)</strong>: AI dialogue framework, Trade Hound, Prophet Owl, Airdrop Hummingbird, wallet authorization.</p>
+        <p><strong>Phase 4 (Value Circulation)</strong>: NFT market, item market, rental market, guild system, synergy skills, DAO governance, cross-chain expansion.</p>
+
+        <h2>15. Conclusion</h2>
+        <p>MoonDog AI is not a short-term project but a long-term, community-driven protocol where technology and economic models work in tandem.</p>
+        <p><span class="highlight">We believe:</span> Pets are not cold NFTs but companions exploring Web3 with users. Skills are not gimmicks but practical tools solving real needs. The economic model is not a Ponzi but a sustainable value cycle. Governance is not just a slogan but a right ultimately returned to the community.</p>
+        <p><span class="highlight">MoonDog AI's final form:</span> A community-owned, pet-driven, decentralized ecosystem covering all aspects of on-chain life. Every participant is both a user and an owner. Every token holder deserves a loyal AI companion.</p>
+
+        <footer>
+            © 2026 MoonDog AI · Decentralized AI Pet Ecosystem<br>
+            Official Website: <a href="https://moondogai.xyz" target="_blank">https://moondogai.xyz</a>
+        </footer>
+    </div>
+</div>
+
+<script>
+    // 禁止右键菜单
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+    });
+    
+    // 禁止保存网页 (Ctrl+S / Cmd+S)
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            return false;
+        }
+        // 禁止 F12
+        if (e.key === 'F12') {
+            e.preventDefault();
+            return false;
+        }
+        // 禁止 Ctrl+Shift+I / Cmd+Option+I
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
+            e.preventDefault();
+            return false;
+        }
+        // 禁止 Ctrl+U (查看源码)
+        if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 'U')) {
+            e.preventDefault();
+            return false;
+        }
+    });
+    
+    // 禁止拖拽图片
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+        img.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+    });
+    
+    // 中英文切换
+    const zhDiv = document.getElementById('zh');
+    const enDiv = document.getElementById('en');
+    const switcher = document.getElementById('langSwitch');
+    let isChinese = true;
+    
+    if (switcher) {
+        switcher.addEventListener('click', () => {
+            if (isChinese) {
+                zhDiv.classList.add('hidden');
+                enDiv.classList.remove('hidden');
+                switcher.textContent = '中文';
+            } else {
+                zhDiv.classList.remove('hidden');
+                enDiv.classList.add('hidden');
+                switcher.textContent = '🌐 English';
+            }
+            isChinese = !isChinese;
+        });
+    }
+</script>
+</body>
+</html>
