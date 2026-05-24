@@ -19,6 +19,7 @@
             line-height: 1.7;
             position: relative;
             touch-action: pan-x pan-y;
+            padding: 16px;
         }
         /* 禁止长按保存图片 */
         img {
@@ -26,6 +27,28 @@
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             user-select: none;
+        }
+        /* 返回主页按钮 */
+        .back-home {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(8px);
+            padding: 8px 16px;
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #ffd966;
+            z-index: 1000;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .back-home:active {
+            transform: scale(0.96);
         }
         /* 水印层 */
         .watermark {
@@ -57,17 +80,16 @@
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 2rem 1.5rem 4rem;
+            padding: 1rem 1rem 3rem;
             position: relative;
             z-index: 1;
         }
         .whitepaper {
             background: rgba(255,255,255,0.03);
             border-radius: 32px;
-            padding: 2.5rem;
+            padding: 1.5rem;
             border: 1px solid rgba(255,255,255,0.08);
         }
-        /* 白皮书头部 + 语言按钮 */
         .whitepaper-header {
             position: relative;
             text-align: center;
@@ -101,7 +123,7 @@
             transform: scale(0.96);
         }
         h1 {
-            font-size: 2.5rem;
+            font-size: 2rem;
             text-align: center;
             background: linear-gradient(135deg, #ffd700, #ff8c00);
             -webkit-background-clip: text;
@@ -112,67 +134,63 @@
         .subtitle {
             text-align: center;
             color: #ffd966;
-            margin-bottom: 2rem;
-            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
             border-bottom: 1px solid rgba(255,255,255,0.1);
             padding-bottom: 1rem;
         }
         .version {
             text-align: center;
             color: #666;
-            font-size: 0.8rem;
-            margin-bottom: 2rem;
+            font-size: 0.75rem;
+            margin-bottom: 1.5rem;
         }
         h2 {
-            font-size: 1.8rem;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
             color: #ffd966;
             border-left: 4px solid #ffd966;
             padding-left: 1rem;
         }
         h3 {
-            font-size: 1.3rem;
-            margin-top: 1.5rem;
-            margin-bottom: 0.75rem;
+            font-size: 1.2rem;
+            margin-top: 1.2rem;
+            margin-bottom: 0.6rem;
             color: #ffaa33;
         }
-        h4 {
-            font-size: 1.1rem;
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
-            color: #ddd;
-        }
         p {
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
             color: #ccc;
+            font-size: 0.9rem;
         }
         ul, ol {
-            margin: 0.75rem 0 1rem 1.8rem;
+            margin: 0.5rem 0 0.8rem 1.5rem;
         }
         li {
-            margin: 0.4rem 0;
+            margin: 0.3rem 0;
             color: #bbb;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1.2rem 0;
             font-size: 0.85rem;
+        }
+        .info-list {
+            list-style: none;
+            margin-left: 0;
             background: rgba(0,0,0,0.3);
-            border-radius: 16px;
-            overflow: hidden;
+            border-radius: 12px;
+            padding: 0.8rem;
         }
-        th, td {
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 10px 12px;
-            text-align: left;
-            vertical-align: top;
+        .info-list li {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.85rem;
         }
-        th {
-            background: rgba(255,217,102,0.15);
+        .info-list li:last-child {
+            border-bottom: none;
+        }
+        .info-list strong {
             color: #ffd966;
-            font-weight: 600;
+            display: inline-block;
+            min-width: 100px;
         }
         .highlight {
             color: #ffd966;
@@ -181,35 +199,31 @@
         .note {
             background: rgba(255,217,102,0.08);
             border-left: 3px solid #ffd966;
-            padding: 0.8rem 1.2rem;
-            margin: 1rem 0;
+            padding: 0.6rem 1rem;
+            margin: 0.8rem 0;
             border-radius: 12px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         footer {
             text-align: center;
-            margin-top: 3rem;
-            padding-top: 2rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
             border-top: 1px solid rgba(255,255,255,0.1);
             color: #666;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
         }
         a {
             color: #ffd966;
             text-decoration: none;
         }
-        a:hover {
-            text-decoration: underline;
-        }
         .hidden {
             display: none;
         }
         @media (max-width: 700px) {
-            .container { padding: 1rem; }
-            .whitepaper { padding: 1.2rem; }
-            h1 { font-size: 1.8rem; }
-            h2 { font-size: 1.4rem; }
-            th, td { font-size: 0.75rem; padding: 6px 8px; }
+            body { padding: 10px; }
+            .whitepaper { padding: 1rem; }
+            h1 { font-size: 1.5rem; }
+            h2 { font-size: 1.2rem; }
             .lang-buttons {
                 position: static;
                 justify-content: center;
@@ -218,10 +232,20 @@
             .whitepaper-header {
                 margin-bottom: 0;
             }
+            .back-home {
+                top: 10px;
+                left: 10px;
+                padding: 5px 10px;
+                font-size: 0.65rem;
+            }
+            .info-list strong {
+                min-width: 80px;
+            }
         }
     </style>
 </head>
 <body>
+<a href="/" class="back-home">← 返回首页</a>
 <div class="watermark"></div>
 
 <!-- 中文版 -->
@@ -284,15 +308,14 @@
 
         <h2>3. 代币经济系统</h2>
         <h3>3.1 基本信息</h3>
-        <table>
-            <tr><th>参数</th><th>数值</th></tr>
-            <tr><td>代币名称</td><td>MOONDOG</td></tr>
-            <tr><td>代币符号</td><td>MOONDOG</td></tr>
-            <tr><td>网络</td><td>Anubis Chain</td></tr>
-            <tr><td>总供应量</td><td>210,000,000,000（2100亿）</td></tr>
-            <tr><td>小数位数</td><td>18</td></tr>
-            <tr><td>合约地址</td><td><code>0xe0A04154C010839b953869182619cEeac1eCA94E</code></td></tr>
-        </table>
+        <ul class="info-list">
+            <li><strong>代币名称：</strong>MOONDOG</li>
+            <li><strong>代币符号：</strong>MOONDOG</li>
+            <li><strong>网络：</strong>Anubis Chain</li>
+            <li><strong>总供应量：</strong>210,000,000,000（2100亿）</li>
+            <li><strong>小数位数：</strong>18</li>
+            <li><strong>合约地址：</strong><code style="word-break:break-all;">0xe0A04154C010839b953869182619cEeac1eCA94E</code></li>
+        </ul>
 
         <h3>3.2 税费机制</h3>
         <p><span class="highlight">买入税费（总计 1%）</span>：0.5% 运营钱包 + 0.5% 添加流动性</p>
@@ -313,16 +336,15 @@
         <p>MoonDog AI 的 NFT 宠物不是"静态头像"，而是动态、可成长、具备实用技能的链上 Agent。每只宠物由品级、元素/类型、性别、初始职业倾向、技能槽数量、技能列表等维度定义。</p>
 
         <h3>4.2 品级体系</h3>
-        <table>
-            <tr><th>品级</th><th>名称</th><th>盲盒概率</th><th>说明</th></tr>
-            <tr><td>N</td><td>普通</td><td>~50%</td><td>基础属性</td></tr>
-            <tr><td>R</td><td>稀有</td><td>~30%</td><td>中等属性</td></tr>
-            <tr><td>SR</td><td>超稀有</td><td>~12%</td><td>较高属性</td></tr>
-            <tr><td>SSR</td><td>极稀有</td><td>~6%</td><td>优秀属性</td></tr>
-            <tr><td>UR</td><td>极限稀有</td><td>~1.5%</td><td>顶级属性</td></tr>
-            <tr><td>LR</td><td>传说</td><td>~0.4%</td><td>接近完美</td></tr>
-            <tr><td>CR</td><td>至高</td><td>~0.1%</td><td>完美属性</td></tr>
-        </table>
+        <ul class="info-list">
+            <li><strong>N（普通）：</strong>~50%，基础属性</li>
+            <li><strong>R（稀有）：</strong>~30%，中等属性</li>
+            <li><strong>SR（超稀有）：</strong>~12%，较高属性</li>
+            <li><strong>SSR（极稀有）：</strong>~6%，优秀属性</li>
+            <li><strong>UR（极限稀有）：</strong>~1.5%，顶级属性</li>
+            <li><strong>LR（传说）：</strong>~0.4%，接近完美</li>
+            <li><strong>CR（至高）：</strong>~0.1%，完美属性</li>
+        </ul>
         <p>注：品级影响初始技能等级上限和升级效率，但不决定最终上限——通过长期养成，低品级宠物也可达到高等级。</p>
 
         <h3>4.3 盲盒铸造</h3>
@@ -332,16 +354,15 @@
 
         <h2>5. 宠物属性与技能体系</h2>
         <h3>5.1 技能等级体系</h3>
-        <table>
-            <tr><th>等级</th><th>符号</th><th>效果倍数</th><th>说明</th></tr>
-            <tr><td>普通</td><td>D</td><td>1.0x</td><td>基础效果</td></tr>
-            <tr><td>优秀</td><td>C</td><td>1.5x</td><td>效果提升 50%</td></tr>
-            <tr><td>稀有</td><td>B</td><td>2.0x</td><td>效果翻倍</td></tr>
-            <tr><td>史诗</td><td>A</td><td>3.0x</td><td>效果三倍</td></tr>
-            <tr><td>传说</td><td>S</td><td>5.0x</td><td>效果五倍</td></tr>
-            <tr><td>神话</td><td>SS</td><td>8.0x</td><td>效果八倍</td></tr>
-            <tr><td>至高</td><td>SSS</td><td>12.0x</td><td>效果十二倍</td></tr>
-        </table>
+        <ul class="info-list">
+            <li><strong>D（普通）：</strong>1.0x 基础效果</li>
+            <li><strong>C（优秀）：</strong>1.5x 效果提升 50%</li>
+            <li><strong>B（稀有）：</strong>2.0x 效果翻倍</li>
+            <li><strong>A（史诗）：</strong>3.0x 效果三倍</li>
+            <li><strong>S（传说）：</strong>5.0x 效果五倍</li>
+            <li><strong>SS（神话）：</strong>8.0x 效果八倍</li>
+            <li><strong>SSS（至高）：</strong>12.0x 效果十二倍</li>
+        </ul>
 
         <h3>5.2 技能类型总览</h3>
         <p>MoonDog AI 的技能体系分为五大类，每类包含若干具体技能。以下列举的技能是初始版本计划实现的，未来可通过社区提案无限扩展。</p>
@@ -392,19 +413,18 @@
         <p>道具系统是 MoonDog AI 经济生态的重要组成。道具既可作为任务奖励免费获得，也可在市场上自由交易。所有道具交易均使用 $MOONDOG 结算，并纳入统一的手续费分配机制。</p>
         
         <h3>8.1 道具类型与功能</h3>
-        <table>
-            <tr><th>道具名称</th><th>功能</th><th>获取方式</th><th>稀有度</th></tr>
-            <tr><td>饲料</td><td>补充宠物生命值（基础量）</td><td>日常任务、市场购买</td><td>普通</td></tr>
-            <tr><td>高级饲料</td><td>补充宠物生命值（大量）</td><td>周常任务、活动、市场购买</td><td>稀有</td></tr>
-            <tr><td>经验药水</td><td>增加宠物经验值</td><td>日常/周常任务、市场购买</td><td>普通</td></tr>
-            <tr><td>高级经验药水</td><td>大幅增加宠物经验值</td><td>赛季任务、活动、市场购买</td><td>稀有</td></tr>
-            <tr><td>洗练石</td><td>普通洗练（随机更换技能）</td><td>周常任务、市场购买</td><td>稀有</td></tr>
-            <tr><td>定向洗练石</td><td>定向洗练（指定技能池）</td><td>活动、市场购买</td><td>史诗</td></tr>
-            <tr><td>锁定洗练石</td><td>锁定洗练（保留技能换等级）</td><td>高难度活动、市场购买</td><td>传说</td></tr>
-            <tr><td>觉醒石</td><td>开启新技能槽</td><td>赛季奖励、市场购买</td><td>史诗</td></tr>
-            <tr><td>升级卷轴</td><td>直接提升技能等级一级</td><td>大型活动、市场购买</td><td>传说</td></tr>
-            <tr><td>进化石</td><td>提升宠物品级</td><td>极稀有活动、市场购买</td><td>至高</td></tr>
-        </table>
+        <ul class="info-list">
+            <li><strong>饲料：</strong>补充宠物生命值（基础量）— 日常任务、市场购买 — 普通</li>
+            <li><strong>高级饲料：</strong>补充宠物生命值（大量）— 周常任务、活动 — 稀有</li>
+            <li><strong>经验药水：</strong>增加宠物经验值 — 日常/周常任务 — 普通</li>
+            <li><strong>高级经验药水：</strong>大幅增加宠物经验值 — 赛季任务、活动 — 稀有</li>
+            <li><strong>洗练石：</strong>普通洗练（随机更换技能）— 周常任务 — 稀有</li>
+            <li><strong>定向洗练石：</strong>定向洗练（指定技能池）— 活动 — 史诗</li>
+            <li><strong>锁定洗练石：</strong>锁定洗练（保留技能换等级）— 高难度活动 — 传说</li>
+            <li><strong>觉醒石：</strong>开启新技能槽 — 赛季奖励 — 史诗</li>
+            <li><strong>升级卷轴：</strong>直接提升技能等级一级 — 大型活动 — 传说</li>
+            <li><strong>进化石：</strong>提升宠物品级 — 极稀有活动 — 至高</li>
+        </ul>
 
         <h3>8.2 道具交易市场</h3>
         <p>玩家之间可自由交易道具：交易货币仅 $MOONDOG，手续费 5%（3% 生态开发 + 2% LP + 1% 销毁）。</p>
@@ -556,15 +576,14 @@
 
         <h2>3. Tokenomics</h2>
         <h3>3.1 Basic Information</h3>
-        <table>
-            <tr><th>Parameter</th><th>Value</th></tr>
-            <tr><td>Token Name</td><td>MOONDOG</td></tr>
-            <tr><td>Token Symbol</td><td>MOONDOG</td></tr>
-            <tr><td>Network</td><td>Anubis Chain</td></tr>
-            <tr><td>Total Supply</td><td>210,000,000,000 (210 billion)</td></tr>
-            <tr><td>Decimals</td><td>18</td></tr>
-            <tr><td>Contract Address</td><td><code>0xe0A04154C010839b953869182619cEeac1eCA94E</code></td></tr>
-        </table>
+        <ul class="info-list">
+            <li><strong>Token Name:</strong> MOONDOG</li>
+            <li><strong>Token Symbol:</strong> MOONDOG</li>
+            <li><strong>Network:</strong> Anubis Chain</li>
+            <li><strong>Total Supply:</strong> 210,000,000,000 (210 billion)</li>
+            <li><strong>Decimals:</strong> 18</li>
+            <li><strong>Contract Address:</strong> <code style="word-break:break-all;">0xe0A04154C010839b953869182619cEeac1eCA94E</code></li>
+        </ul>
 
         <h3>3.2 Tax Mechanism</h3>
         <p><span class="highlight">Buy Tax (1% total)</span>: 0.5% operational wallet + 0.5% LP</p>
@@ -575,32 +594,30 @@
         <p>MoonDog AI NFTs are not static avatars but dynamic, growable, utility-rich on-chain agents. Each pet is defined by grade, element/type, gender, skill slots, and skill list.</p>
         
         <h3>4.1 Grade System</h3>
-        <table>
-            <tr><th>Grade</th><th>Name</th><th>Probability</th><th>Description</th></tr>
-            <tr><td>N</td><td>Normal</td><td>~50%</td><td>Base</td></tr>
-            <tr><td>R</td><td>Rare</td><td>~30%</td><td>Medium</td></tr>
-            <tr><td>SR</td><td>Super Rare</td><td>~12%</td><td>High</td></tr>
-            <tr><td>SSR</td><td>Extremely Rare</td><td>~6%</td><td>Excellent</td></tr>
-            <tr><td>UR</td><td>Ultra Rare</td><td>~1.5%</td><td>Top</td></tr>
-            <tr><td>LR</td><td>Legendary</td><td>~0.4%</td><td>Near Perfect</td></tr>
-            <tr><td>CR</td><td>Cosmic Rare</td><td>~0.1%</td><td>Perfect</td></tr>
-        </table>
+        <ul class="info-list">
+            <li><strong>N (Normal):</strong> ~50%, Base stats</li>
+            <li><strong>R (Rare):</strong> ~30%, Medium stats</li>
+            <li><strong>SR (Super Rare):</strong> ~12%, High stats</li>
+            <li><strong>SSR (Extremely Rare):</strong> ~6%, Excellent stats</li>
+            <li><strong>UR (Ultra Rare):</strong> ~1.5%, Top stats</li>
+            <li><strong>LR (Legendary):</strong> ~0.4%, Near perfect</li>
+            <li><strong>CR (Cosmic Rare):</strong> ~0.1%, Perfect stats</li>
+        </ul>
 
         <h3>4.2 Blind Box</h3>
         <p>Cost: 10,000 MOONDOG. Skill count probability: 1 skill 90%, 2 skills 9%, 3 skills 1%. Skill grade distribution: D ~50%, C ~30%, B ~12%, A ~6%, S ~1.5%, SS ~0.4%, SSS ~0.1%.</p>
 
         <h2>5. Pet Attributes & Skill System</h2>
         <h3>5.1 Skill Grades</h3>
-        <table>
-            <tr><th>Grade</th><th>Symbol</th><th>Multiplier</th></tr>
-            <tr><td>Normal</td><td>D</td><td>1.0x</td></tr>
-            <tr><td>Excellent</td><td>C</td><td>1.5x</td></tr>
-            <tr><td>Rare</td><td>B</td><td>2.0x</td></tr>
-            <tr><td>Epic</td><td>A</td><td>3.0x</td></tr>
-            <tr><td>Legendary</td><td>S</td><td>5.0x</td></tr>
-            <tr><td>Mythic</td><td>SS</td><td>8.0x</td></tr>
-            <tr><td>Supreme</td><td>SSS</td><td>12.0x</td></tr>
-        </table>
+        <ul class="info-list">
+            <li><strong>D (Normal):</strong> 1.0x base effect</li>
+            <li><strong>C (Excellent):</strong> 1.5x effect</li>
+            <li><strong>B (Rare):</strong> 2.0x effect</li>
+            <li><strong>A (Epic):</strong> 3.0x effect</li>
+            <li><strong>S (Legendary):</strong> 5.0x effect</li>
+            <li><strong>SS (Mythic):</strong> 8.0x effect</li>
+            <li><strong>SSS (Supreme):</strong> 12.0x effect</li>
+        </ul>
 
         <h3>5.2 Skill Categories</h3>
         <ul>
@@ -670,7 +687,7 @@
 </div>
 
 <script>
-    // 禁止保存网页 (Ctrl+S / Cmd+S)
+    // 禁止保存网页
     document.addEventListener('keydown', function(e) {
         if ((e.ctrlKey || e.metaKey) && e.key === 's') {
             e.preventDefault();
